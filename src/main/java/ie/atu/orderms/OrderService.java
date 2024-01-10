@@ -1,27 +1,35 @@
 package ie.atu.orderms;
 
-import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.stereotype.Service;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
+    private final OrderRepository orderRepo;
 
-    // Simulating a database with an in-memory map
-    private final Map<String, Order> orderData = new HashMap<>();
-
-    // Add necessary dependencies, such as Feign clients for communication with other microservices
+    public OrderService(OrderRepository orderRepo) {
+        this.orderRepo = orderRepo;
+    }
 
     public void createOrder(Order order) {
-        orderData.put(order.getOrderId(), order);
-        System.out.println("Order created: " + order);
+        orderRepo.save(order);
         // Additional logic for interacting with other microservices if needed
     }
 
-    public Order getOrderById(String orderId) {
-        return orderData.get(orderId);
+    public List<Order> getAllOrders() {
+        return orderRepo.findAll();
     }
 
-    // Additional methods for updating or deleting orders
+    public Optional<Order> getOrderById(Long orderId) {
+        return orderRepo.findById(orderId);
+    }
+
+    public void updateOrder(Order order) {
+        orderRepo.save(order);
+    }
+
+    public void deleteOrderById(Long orderId) {
+        orderRepo.deleteById(orderId);
+    }
 }

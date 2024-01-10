@@ -1,21 +1,40 @@
 package ie.atu.orderms;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+
+import java.math.BigDecimal;
 import java.util.List;
 
+@Entity
 @Data
+@Table(name = "orders")
 public class Order {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long Id;
 
-    @NotBlank(message = "ie.atu.orderms.Order ID cannot be blank")
-    private String orderId;
-
-    @NotBlank(message = "Customer ID cannot be blank")
+    @NotBlank
     private String customerId;
+/*
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "order_id")
+    private List<Order> orderItems;
+*/
+    // Other attributes as needed
+    @NotBlank
+    private String itemId;
 
-    @NotNull(message = "ie.atu.orderms.Order items cannot be null")
-    private List<OrderItem> orderItems;
+    @NotBlank
+    private String name;
 
-    // Add other attributes as needed
+    @NotNull
+    private Integer quantity;
+
+    @NotNull
+    private BigDecimal price;
+
+    // Constructors, getters, and setters
 }

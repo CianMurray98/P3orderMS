@@ -11,6 +11,4 @@ public interface UserFeignClient {
     @GetMapping("/user/{customerId}")
     User getUserByCustomerId(@PathVariable String customerId);
 
-    //@GetMapping("/menu/{itemId}")
-    //String getMenuItemById(@PathVariable String itemId);
 }

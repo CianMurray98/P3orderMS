@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Validated
 @RequestMapping("/order")
 @RestController
@@ -22,16 +24,28 @@ public class OrderController {
         return new ResponseEntity<>("Order created successfully", HttpStatus.CREATED);
     }
 
-    @GetMapping("/{orderId}")
-    public ResponseEntity<Order> getOrderById(
-            @PathVariable @NotBlank(message = "Order ID cannot be blank") String orderId) {
-        Order order = orderService.getOrderById(orderId);
-        if (order != null) {
-            return new ResponseEntity<>(order, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @GetMapping("/all")
+    public ResponseEntity<List<Order>> getAllOrders() {
+        List<Order> orders = orderService.getAllOrders();
+        return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    // Additional endpoints for updating or deleting orders
+    @GetMapping("/{orderId}")
+    public ResponseEntity<Order> getOrderById(@PathVariable Long orderId) {
+        return orderService.getOrderById(orderId)
+                .map(order -> new ResponseEntity<>(order, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PutMapping("/updateOrder")
+    public ResponseEntity<String> updateOrder(@RequestBody @Valid Order order) {
+        orderService.updateOrder(order);
+        return new ResponseEntity<>("Order updated successfully", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deleteOrder/{orderId}")
+    public ResponseEntity<String> deleteOrder(@PathVariable Long orderId) {
+        orderService.deleteOrderById(orderId);
+        return new ResponseEntity<>("Order deleted successfully", HttpStatus.OK);
+    }
 }
